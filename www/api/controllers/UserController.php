@@ -12,13 +12,10 @@ class UserController{
     function Login(){
 
         $userData = json_decode(file_get_contents('php://input'));
-
         $userName = $userData -> user;
         $password = $userData -> password;
-
         $result = $this -> UserModel -> getUser($userName);
         if($user = $result -> fetch_assoc()){
-
             if($user['password']==$password){
 
                 //gerar um token para o usuario
@@ -41,7 +38,7 @@ class UserController{
          ];
          $header = json_encode($header);
          $header = base64_encode($header);
-         $header = str_replace(['+', '/', '='], ['-', '_', ''], $header); //base64url
+         $header = str_replace(['+', '/', '='], ['-', '_', ''], $header);
          
          $payload = [
             'iss' => 'localhost',
@@ -51,15 +48,11 @@ class UserController{
          ];
          $payload = json_encode($payload);
          $payload = base64_encode($payload);
-         $payload = str_replace(['+', '/', '='], ['-', '_', ''], $payload); //base64url
-         
+         $payload = str_replace(['+', '/', '='], ['-', '_', ''], $payload);
          $signature = hash_hmac('sha256',"$header.$payload",'minha-senha',true);
          $signature = base64_encode($signature);
-         $signature = str_replace(['+', '/', '='], ['-', '_', ''], $signature); //base64url
-         
-         
+         $signature = str_replace(['+', '/', '='], ['-', '_', ''], $signature);
          $token = $header . "." . $payload . "." . $signature;
-         
         return $token;  
     }
 

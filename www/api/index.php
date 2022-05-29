@@ -1,4 +1,5 @@
 <?php 
+
 $requestMethod = $_SERVER["REQUEST_METHOD"];
 $local = $_SERVER['SCRIPT_NAME'];
 $uri = $_SERVER['PHP_SELF']; 
@@ -57,6 +58,45 @@ if(isset($uriSegments[1])){
 			}
 
         break;
+		
+		case 'contact':
+			require_once("controllers/UserController.php");
+			$User = new UserController();
+			require_once("controllers/ContactController.php");
+			$contact = new ContactController();
+			switch($requestMethod){
+				case 'GET':
+					if($User -> isAdmin()){
+						if(!isset($uriSegments[2])){
+							$contact -> listContacts();
+						}else{
+							echo $contact -> listContact($uriSegments[2]);
+						}
+					}
+				break;
+	
+				case 'POST':
+					$contact -> insertContact();
+				break;
+	
+				case 'PUT':
+					if($User -> isAdmin()){
+						if(isset($uriSegments[2])){
+							$contact -> updateContact($uriSegments[2]);
+						}
+					}
+				break;
+	
+				case 'DELETE':
+					if($User -> isAdmin()){
+						if(isset($uriSegments[2])){
+							$contact -> deleteContact($uriSegments[2]);
+						}
+					}
+				break;
+			}
+		break;
 	}
+
 }
 ?>
